@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Add userdata</h1>
+<div mat-dialog-content>
+  <!-- <mat-form-field appearance="outline">
+    <mat-label>First Name</mat-label>
+    <input matInput placeholder="Placeholder" class="form-control">
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Last Name</mat-label>
+    <input matInput placeholder="Placeholder" class="form-control">
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="Placeholder" class="form-control">
+  </mat-form-field> -->
+  <form [formGroup]="form">
+    <div class="mb-2">
+      <label for="firstname">First Name</label>
+      <input type="text" class="form-control" id="firstname" formControlName="firstname" required>
+      <span class="err-msg" *ngIf="form.get('firstname').touched && form.get('firstname').hasError('required')">Enter the First Name</span>
+  
+    </div>
+    <div class="mb-2">
+      <label for="lastname">Last Name</label>
+      <input type="text" class="form-control" id="lastname" formControlName="lastname" required>
+      <span class="err-msg" *ngIf="form.get('lastname').touched && form.get('lastname').hasError('required')">Enter the last Name</span>
+     
+     
+    </div>
+    <div class="mb-2">
+      <label for="email">Email</label>
+      <input type="text" class="form-control" id="email" formControlName="email">
+      <span class="err-msg" *ngIf="form.get('email').touched && form.get('email').hasError('required')">Enter the Email</span>
+      
+    </div>
+    <div class="text-end">
+      <button class="btn btn-primary m-3 cancelbtn" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-primary m-3" [disabled]="!form.valid" (click)="submit()">Save</button>
+    </div>
+    
+  </form>
+</div>

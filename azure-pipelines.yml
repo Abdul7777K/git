@@ -1,0 +1,63 @@
+trigger:
+- none
+variables:
+  imageRepo: material-app 
+  tag: '$(Build.BuildId)'
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '16.x'
+        displayName: 'Install Node.js 16.x'
+
+      - script: |
+          npm install -g @angular/cli
+          npm install
+          ng build --configuration production 
+        displayName: 'npm install and build'
+        workingDirectory: '$(Build.SourcesDirectory)'
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/assignment'
+          includeRootFolder: false
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        displayName: 'Archive Build Artifacts'
+        
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'   
+      - task: Docker@2
+        displayName: Build an image
+        inputs:
+          containerRegistry: 'docker-service-connection'
+          repository: '$(imageRepo)'
+          command: 'buildAndPush'
+          Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+          tags: |
+            $(tag)
+            latest
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureWebAppContainer@1
+      inputs:
+        appName: 'web-docker-app' # Replace with the name of your Azure Web App
+        imageName: 'abdocker.azurecr.io/material-app:$(Build.BuildId)'
+        multicontainerConfigFile: ''
+        containerCommand: ''
+        azureSubscription: 'web-docker-app' # Replace with the name of your Azure service connection
+      displayName: 'Deploy the app to Azure Web App'

@@ -1,0 +1,80 @@
+
+<section>
+    <div class="container-fluid">
+        <div class="row">
+                <div class="backgroundImage col-4 d-flex flex-column justify-content-end">
+                    <div class="Goof-card">
+                        <h6 class="card-heading">Goof Place to Work</h6>
+                        <p class="card-paragraph">Transformative collaboration for <br>larger teams</p>
+                        <button class=" card-button">Schedule a demo</button>
+                    </div>
+                </div>
+                <div class="col-8 d-flex flex-row justify-content-center" *ngIf="!loginVsSign">
+                        <form class="d-flex flex-column justify-content-center length-form" [formGroup]="loginForm" (ngSubmit)="submit()">
+                                <h1 class="sign-heading">Sign in to Accion</h1>
+                                <p class="sign-paragraph">Enter your Details Below</p>
+                                <label for="logusername" class="mb-1 username-label">Username</label>
+                                <input type="text" id="logusername" class="form-control mb-2" formControlName="username" required/>
+                                <span class="err-msg" *ngIf="loginForm.get('username').touched && loginForm.get('username').hasError('required')">Enter user name</span>
+                                <span class="err-msg" *ngIf="loginForm.get('username').touched && loginForm.get('username').hasError('minlength')">Enter valid name</span>    
+                                <span class="err-msg" *ngIf="isFieldInvalid('username')">
+                                    User name cannot be empty
+                                </span>
+
+                                <label for="logpassword" class="mb-1 userpassword-label">Password</label>
+                                <input type="password" id="logpassword" class="form-control" formControlName="password" required/>
+                                <span class="err-msg" *ngIf="loginForm.get('password').touched && loginForm.get('password').hasError('required')">Password can not be empty</span>
+                                <span class="err-msg" *ngIf="loginForm.get('password').touched && loginForm.get('password').hasError('minlength')">Minimum length should be 8 charectors</span>
+                                <span class="err-msg" *ngIf="isFieldInvalid('password')">
+                                    Password can not be empty
+                                </span>
+
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn btn-primary" >Log in</button>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <p>Need an account? <span (click)="signup()" class="sing-up" type="button">Sign up</span></p>
+                                </div>
+                        </form>
+                </div>
+
+                <!-- Registration form -->
+                <div class="col-8 d-flex flex-row justify-content-center registration-page" *ngIf="loginVsSign">
+                    <form class="d-flex flex-column justify-content-center length-form"  (ngSubmit)="submit()">
+                            <h1 class="sign-heading text-center">Register</h1>
+                            <p class="sign-paragraph text-center">Fill out this form</p>
+                            <label for="regusername" class="mb-1 username-label">Username</label>
+                            <input type="text" id="regusername" class="form-control mb-2" formControlName="regusername" required placeholder="User Name"/>
+                            <span class="err-msg" *ngIf="loginForm.get('regusername').touched && loginForm.get('regusername').hasError('required')">Enter user name</span>
+                            <span class="err-msg" *ngIf="loginForm.get('regusername').touched && loginForm.get('regusername').hasError('minlength')">Enter valid name</span>    
+                            <span class="err-msg" *ngIf="isFieldInvalid('regusername')">
+                                User name cannot be empty
+                            </span>
+
+                            <label for="reguseremail" class="mb-1 username-label">Email</label>
+                            <input type="text" id="reguseremail" class="form-control mb-2" formControlName="reguseremail" required placeholder="Email"/>
+                            <span class="err-msg" *ngIf="loginForm.get('reguseremail').touched && loginForm.get('reguseremail').hasError('required')">Enter your email</span>   
+                            <span class="err-msg" *ngIf="isFieldInvalid('reguseremail')">
+                                Email cannot be empty
+                            </span>
+
+                            <label for="regpassword" class="mb-1 userpassword-label">Password</label>
+                            <input type="password" id="regpassword" class="form-control" formControlName="regpassword" required placeholder="password"/>
+                            <span class="err-msg" *ngIf="loginForm.get('regpassword').touched && loginForm.get('regpassword').hasError('required')">Password can not be empty</span>
+                            <span class="err-msg" *ngIf="loginForm.get('regpassword').touched && loginForm.get('regpassword').hasError('minlength')">Minimum length should be 8 charectors</span>
+                            <span class="err-msg" *ngIf="isFieldInvalid('regpassword')">
+                                Password can not be empty
+                            </span>
+
+                            <div class="text-center mt-3">
+                                <button type="submit" class="btn btn-primary w-100" >Create Account</button>
+                            </div>
+                            <div class="mt-3 text-center">
+                                <p>Have already an account? <span (click)="gotologinpage()" type="button" class="gotologinpage">Login here</span></p>
+                            </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+   
+</section>

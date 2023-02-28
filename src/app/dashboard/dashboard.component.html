@@ -1,0 +1,64 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <button mat-button [matMenuTriggerFor]="menu" class="menu-bar">Menu</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLinkActive="active" routerLink="/homepage">Home</button>
+            <button mat-menu-item (click)="logoutpage()">Log out</button>
+        </mat-menu>
+        <span class="dashboard-space">DASHBOARD</span>
+        <span class="example-spacer  text-end">
+            
+        </span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="row d-flex m-3">
+    <div class="col-5">
+        <input type="search" placeholder="search" class="form-control">
+    </div>
+    <div class="col-3">
+        <button class="resetbtn"><mat-icon>refresh</mat-icon></button>
+    </div>
+    <div class="col-2">
+        <button class="createbtn p-2" (click)="openDialog()"><i class="bi bi-plus-square add-icon"></i>Add New</button>
+    </div>
+    
+</div>
+
+<table mat-table [dataSource]="usersData" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Action">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+            <span><mat-icon class="icon-spacing" (click)="edituserdata(element)">edit</mat-icon></span><span (click)="deleteitem(element)"><mat-icon >delete</mat-icon></span></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

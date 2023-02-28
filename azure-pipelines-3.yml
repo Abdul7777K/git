@@ -1,0 +1,91 @@
+trigger:
+- none
+variables:
+  imageRepo: material-app 
+  tag: '$(Build.BuildId)'
+  azureSubscriptionForACR: 'docker-service-connection'
+  kubernetesConnection: 'k8s-s-c'
+  namespace: 'default'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # - task: NodeTool@0
+      #   inputs:
+      #     versionSpec: '16.x'
+      #   displayName: 'Install Node.js 16.x'
+
+      # - script: |
+      #     npm install -g @angular/cli
+      #     npm install
+      #     ng build --configuration production 
+      #   displayName: 'npm install and build'
+      #   workingDirectory: '$(Build.SourcesDirectory)'
+      # - task: ArchiveFiles@2
+      #   inputs:
+      #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/assignment'
+      #     includeRootFolder: false
+      #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      #   displayName: 'Archive Build Artifacts'
+        
+      # - task: PublishBuildArtifacts@1
+      #   inputs:
+      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      #     ArtifactName: 'drop'
+      #     publishLocation: 'Container'   
+      - task: Docker@2
+        displayName: Build an image
+        inputs:
+          containerRegistry: $(azureSubscriptionForACR)
+          repository: '$(imageRepo)'
+          command: 'buildAndPush'
+          Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+          tags: |
+            $(tag)
+            latest
+
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # - task: KubernetesManifest@0
+      #   inputs:
+      #     action: 'deploy'
+      #     kubernetesServiceConnection: 'k8s-s-c'
+      #     namespace: 'default'
+      #     manifests: |
+      #        $(Build.SourcesDirectory)/k-manifest.yaml
+         
+        - task: HelmInstaller@0
+          inputs:
+            helmVersion: '2.14.1'
+            installKubectl: false
+
+
+        - task: HelmDeploy@0
+          displayName: 'Deploy Helm chart'
+          inputs:
+            connectionType: 'Kubernetes Service Connection'
+            kubernetesServiceConnection: '$(kubernetesConnection)'
+            namespace: '$(namespace)'
+            command: 'install'
+            chartType: 'FilePath'
+            chartPath: '$(System.DefaultWorkingDirectory)/my-app-chart'
+            # overrideValues: |
+            #   replicaCount=3
+            #   image.tag=v1.1
+
+
+
+

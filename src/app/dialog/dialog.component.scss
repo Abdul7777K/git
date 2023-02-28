@@ -1,0 +1,15 @@
+mat-form-field{
+    width:100%;
+}
+.err-msg{
+    color:red;
+    font-size:smaller;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.cancelbtn{
+    background-color: rgb(206, 98, 40);
+    border-width: 0px;
+}
+input.ng-touched.ng-valid{
+    border:2px solid rgb(138, 229, 138);
+}
